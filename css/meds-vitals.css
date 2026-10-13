@@ -1,0 +1,488 @@
+/* ==========================================================================
+   HEALTH COPILOT — MEDICATION, VITALS & DOCTOR VISIT PREP STYLES
+   ========================================================================== */
+
+/* Sub-tabs / Sections in Meds & Vitals */
+.meds-vitals-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+@media (max-width: 1024px) {
+  .meds-vitals-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  backdrop-filter: var(--glass-blur);
+}
+
+.section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-header-row h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Adherence Score Box */
+.adherence-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(10, 14, 23, 0.6);
+  border: 1px solid var(--border-subtle);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.adherence-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.adherence-pct {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--status-normal);
+}
+
+/* Medication Cards */
+.medications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.med-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  transition: var(--transition);
+}
+
+.med-card:hover {
+  border-color: var(--border-bright);
+}
+
+.med-card.med-taken {
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.btn-check-med {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 2px solid var(--border-bright);
+  background: transparent;
+  color: #FFF;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.btn-check-med.checked {
+  background: var(--status-normal);
+  border-color: var(--status-normal);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.med-info-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.med-main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.med-name {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.med-dosage {
+  color: var(--accent-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  margin-left: 6px;
+}
+
+.med-timing-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.med-purpose {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.med-instructions {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.btn-delete-med {
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: var(--transition);
+  font-size: 14px;
+}
+.btn-delete-med:hover {
+  opacity: 1;
+}
+
+/* Drug Interaction Card */
+.interaction-card {
+  display: flex;
+  gap: 14px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.interaction-icon {
+  font-size: 22px;
+}
+
+.interaction-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FDE68A;
+  margin-bottom: 4px;
+}
+
+.interaction-card p {
+  font-size: 13px;
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+
+/* Vitals Table */
+.vitals-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 24px;
+}
+
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.vitals-table th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.vitals-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.vital-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: block;
+}
+
+.vital-value-cell {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.vital-badge {
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.badge-normal { background: var(--status-normal-bg); color: var(--status-normal); }
+.badge-elevated { background: var(--status-elevated-bg); color: var(--status-elevated); }
+.badge-high { background: var(--status-high-bg); color: var(--status-high); }
+.badge-low { background: var(--status-low-bg); color: var(--status-low); }
+
+.btn-del-vital {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-del-vital:hover {
+  color: #EF4444;
+}
+
+/* SVG Telemetry Chart */
+.chart-wrapper {
+  background: rgba(10, 14, 23, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-item .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.telemetry-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ==========================================================================
+   DOCTOR VISIT PREP TAB STYLES
+   ========================================================================== */
+
+.doctor-prep-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.prep-document-sheet {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  padding: 36px 40px;
+  box-shadow: var(--shadow-lg);
+}
+
+.prep-doc-header {
+  border-bottom: 2px solid var(--border-subtle);
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.prep-doc-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.prep-patient-meta {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.prep-provider-info {
+  color: var(--accent-cyan);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.prep-section {
+  margin-bottom: 24px;
+}
+
+.prep-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-accent);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prep-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.prep-metric-tile {
+  background: rgba(10, 14, 23, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-lbl {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.metric-num {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 4px 0;
+}
+
+.metric-sub {
+  font-size: 11px;
+  color: var(--accent-cyan);
+}
+
+.prep-labs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prep-lab-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(10, 14, 23, 0.4);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  font-size: 13px;
+}
+
+.prep-flag-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+.prep-flag-badge.high { background: var(--status-high-bg); color: var(--status-high); }
+.prep-flag-badge.low { background: var(--status-low-bg); color: var(--status-low); }
+
+.prep-med-row {
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.prep-med-purpose {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.prep-questions-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prep-question-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(242, 100, 48, 0.06);
+  border: 1px solid rgba(242, 100, 48, 0.2);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+}
+
+.q-number {
+  background: var(--accent-primary);
+  color: #FFF;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.q-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Print Specific Rules */
+@media print {
+  body {
+    background: #FFF !important;
+    color: #000 !important;
+  }
+  .app-sidebar, .mobile-top-bar, .view-header, .no-print {
+    display: none !important;
+  }
+  .app-main {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+  .prep-document-sheet {
+    background: #FFF !important;
+    color: #000 !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+  .prep-doc-title, .prep-section-title, .prep-patient-meta, .metric-num, .q-text {
+    color: #000 !important;
+  }
+  .prep-metric-tile, .prep-lab-item, .prep-question-item {
+    background: #F9FAFB !important;
+    border: 1px solid #E5E7EB !important;
+    color: #000 !important;
+  }
+}

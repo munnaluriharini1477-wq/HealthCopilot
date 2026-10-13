@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Powered Personal Health Copilot | AItrix Labs</title>
+  <meta name="description" content="An intelligent personal health copilot that helps individuals understand, organize, and manage their healthcare journey with lab analysis, symptom triage, medication safety, and clinical visit prep.">
+  <meta name="theme-color" content="#070A11">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+
+  <!-- Core & Component Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/lab-explainer.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/meds-vitals.css">
+</head>
+<body>
+  <!-- Mobile Top Navigation Bar -->
+  <div class="mobile-top-bar no-print">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <img src="assets/logo.jpg" alt="Health Copilot Logo" style="width: 32px; height: 32px; border-radius: 8px;">
+      <span style="font-weight: 800; font-family: var(--font-display);">HealthCopilot</span>
+    </div>
+    <button id="mobileMenuBtn" class="menu-btn" aria-label="Open Navigation">☰ Menu</button>
+  </div>
+
+  <div class="app-container">
+    <!-- Desktop Sidebar Navigation -->
+    <aside class="app-sidebar no-print">
+      <div class="brand-header">
+        <img src="assets/logo.jpg" alt="Health Copilot Emblem" class="brand-logo-img">
+        <div class="brand-text">
+          <h1>HealthCopilot</h1>
+          <span class="brand-tagline">by AItrix Labs</span>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item active" data-tab="overview">
+          <span class="nav-icon">📊</span>
+          <span>Command Center</span>
+        </li>
+        <li class="nav-item" data-tab="labs">
+          <span class="nav-icon">🔬</span>
+          <span>Lab Explainer</span>
+        </li>
+        <li class="nav-item" data-tab="copilot">
+          <span class="nav-icon">💬</span>
+          <span>Copilot Chat & Triage</span>
+        </li>
+        <li class="nav-item" data-tab="meds">
+          <span class="nav-icon">💊</span>
+          <span>Meds & Vitals Tracker</span>
+        </li>
+        <li class="nav-item" data-tab="doctor">
+          <span class="nav-icon">📋</span>
+          <span>Doctor Visit Prep</span>
+        </li>
+        <li class="nav-item" data-tab="settings">
+          <span class="nav-icon">⚙️</span>
+          <span>System Settings</span>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="system-status">
+          <span class="status-dot-pulse"></span>
+          <span>Clinical Engine: Active & Private</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+
+      <!-- ===================================================================
+           VIEW 1: OVERVIEW / COMMAND CENTER
+           =================================================================== -->
+      <section id="view-overview" class="view-section active-view">
+        <div class="dash-hero-banner">
+          <div class="patient-intro">
+            <h3>Hello, <span id="dashPatientName">Alex Morgan</span> 👋</h3>
+            <div class="patient-meta-row">
+              <span class="patient-status-pill">Active Journey</span>
+              <div id="dashConditionsList" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
+            </div>
+          </div>
+
+          <div class="wellness-score-badge">
+            <div class="score-circle">
+              <span id="wellnessScoreNum">88</span>
+            </div>
+            <div class="score-info">
+              <span class="score-label">Wellness Score</span>
+              <span class="score-rating">Well Controlled</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Triage Search -->
+        <div class="quick-triage-container no-print">
+          <div class="quick-triage-box">
+            <span class="triage-icon">🩺</span>
+            <input type="text" id="quickTriageInput" placeholder="Describe symptoms, ask about medications, or enter a lab value (e.g. 'high fasting glucose')...">
+            <button class="btn-primary" id="quickTriageBtn">Triage with Copilot</button>
+          </div>
+        </div>
+
+        <!-- 3-Column Metrics Snapshot -->
+        <div class="dash-metrics-grid">
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-title">Blood Pressure</span>
+              <span style="font-size: 18px;">💓</span>
+            </div>
+            <div id="dashBPSnapshot">
+              <span class="snapshot-val">128/82 <small>mmHg</small></span>
+              <span class="snapshot-status elevated">ELEVATED</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-title">Fasting Blood Glucose</span>
+              <span style="font-size: 18px;">🩸</span>
+            </div>
+            <div id="dashGlucoseSnapshot">
+              <span class="snapshot-val">112 <small>mg/dL</small></span>
+              <span class="snapshot-status elevated">ELEVATED</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-title">Resting Heart Rate</span>
+              <span style="font-size: 18px;">📈</span>
+            </div>
+            <div id="dashHRSnapshot">
+              <span class="snapshot-val">72 <small>bpm</small></span>
+              <span class="snapshot-status normal">OPTIMAL</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Panel: Meds Today & Recent Lab Findings -->
+        <div class="dash-content-columns">
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3>Today's Medication Schedule</h3>
+              <a href="#meds" onclick="window.app.switchTab('meds')">Manage All →</a>
+            </div>
+            <div class="dash-meds-list" id="dashMedsTodayList"></div>
+          </div>
+
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3>Latest Diagnostic Findings</h3>
+              <a href="#labs" onclick="window.app.switchTab('labs')">Full Report →</a>
+            </div>
+            <div id="dashLabAlerts"></div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================================
+           VIEW 2: LAB EXPLAINER & BIOMARKER VISUALIZER
+           =================================================================== -->
+      <section id="view-labs" class="view-section">
+        <div class="view-header">
+          <div>
+            <h2>Diagnostic Lab Explainer</h2>
+            <p class="view-subtitle">Demystify blood tests, metabolic panels, and lipid profiles into plain-English clinical insights.</p>
+          </div>
+        </div>
+
+        <div class="lab-controls-panel no-print">
+          <div class="lab-selector-row">
+            <div>
+              <label for="labPresetSelect" style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Load Sample Laboratory Report:</label>
+              <select id="labPresetSelect" class="form-select" style="margin-top: 6px; width: 340px;">
+                <option value="lab_cmp_01">Comprehensive Metabolic Panel (CMP)</option>
+                <option value="lab_lipid_02">Lipid Profile & Cardiovascular Panel</option>
+                <option value="lab_a1c_03">Hemoglobin A1c (Glycated Hemoglobin)</option>
+              </select>
+            </div>
+            <span style="color: var(--text-muted); font-size: 13px;">or paste your raw clinical lab report below</span>
+          </div>
+
+          <div class="lab-raw-collapsible">
+            <details>
+              <summary>📝 Paste / View Raw Lab Text for Custom AI Parsing</summary>
+              <div class="raw-input-wrapper">
+                <textarea id="rawLabInput" class="form-textarea" placeholder="Paste your lab report text here (e.g. 'Glucose: 118 mg/dL [HIGH]...')"></textarea>
+                <button class="btn-primary" id="analyzeRawLabBtn">Analyze Raw Text with Copilot</button>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- Active Report Metadata Banner -->
+        <div class="report-meta-card">
+          <div class="report-meta-header">
+            <h3 id="reportTitleDisplay">Comprehensive Metabolic Panel (CMP)</h3>
+            <div class="report-meta-sub">
+              <span id="reportDateDisplay">Collected: 2026-10-02</span>
+              <span id="reportFacilityDisplay">LabCorp Diagnostics</span>
+            </div>
+          </div>
+          <div class="report-summary-box" id="reportSummaryDisplay">
+            Elevated fasting glucose (118 mg/dL) and mild ALT elevation (44 U/L). Normal kidney function and electrolytes.
+          </div>
+        </div>
+
+        <!-- Biomarker Filters -->
+        <div class="lab-filter-bar no-print">
+          <div class="filter-pills">
+            <label class="filter-pill-label">
+              <input type="radio" name="labFilter" value="all" checked> All Biomarkers
+            </label>
+            <label class="filter-pill-label">
+              <input type="radio" name="labFilter" value="abnormal"> Flagged / Abnormal Only
+            </label>
+            <label class="filter-pill-label">
+              <input type="radio" name="labFilter" value="normal"> Within Optimal Range
+            </label>
+          </div>
+        </div>
+
+        <!-- Biomarker Cards Grid -->
+        <div class="biomarkers-grid" id="biomarkersContainer"></div>
+      </section>
+
+
+      <!-- ===================================================================
+           VIEW 3: COPILOT CHAT & SYMPTOM TRIAGE
+           =================================================================== -->
+      <section id="view-copilot" class="view-section">
+        <div class="view-header">
+          <div>
+            <h2>Clinical Copilot & Symptom Triage</h2>
+            <p class="view-subtitle">Interactive conversational healthcare navigation with urgency risk-stratification and clinical explanations.</p>
+          </div>
+        </div>
+
+        <div class="chat-app-wrapper">
+          <div class="chat-top-header">
+            <div class="chat-ai-profile">
+              <div class="ai-avatar-badge">🩺</div>
+              <div class="ai-profile-info">
+                <h3>Personal Health Copilot</h3>
+                <p><span class="pulse-indicator"></span> Intelligent Clinical Engine Active</p>
+              </div>
+            </div>
+            <button class="btn-secondary" id="clearChatBtn" style="font-size: 12px; padding: 6px 12px;">Clear History</button>
+          </div>
+
+          <!-- Quick Suggestion Chips -->
+          <div class="quick-chips-wrapper no-print" id="quickPromptChips">
+            <button class="prompt-chip" data-prompt="My fasting blood glucose is 118 mg/dL. What does this indicate and what actions can I take?">🩸 Glucose 118 mg/dL meaning</button>
+            <button class="prompt-chip" data-prompt="Can I take ibuprofen or Advil while I am on Lisinopril for blood pressure?">⚠️ Ibuprofen + Lisinopril interaction</button>
+            <button class="prompt-chip" data-prompt="I forgot my morning blood pressure medication yesterday. Can I double up today?">💊 Missed medication dose advice</button>
+            <button class="prompt-chip" data-prompt="I feel lightheaded when standing up quickly. Resting heart rate is 72 bpm.">💓 Dizziness upon standing</button>
+            <button class="prompt-chip emergency-chip" data-prompt="I have sudden severe pressure in my chest radiating to my left arm.">🚨 Emergency test: Severe chest pain</button>
+          </div>
+
+          <!-- Chat Messages Flow -->
+          <div class="chat-messages-container" id="chatMessages"></div>
+
+          <!-- Chat Input -->
+          <div class="chat-input-bar no-print">
+            <form id="chatForm">
+              <input type="text" id="chatInput" placeholder="Ask a health question, report a symptom, or evaluate medications..." autocomplete="off">
+              <button type="submit" class="btn-primary" id="sendChatBtn">Send ➔</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================================
+           VIEW 4: MEDICATION & VITALS TRACKER
+           =================================================================== -->
+      <section id="view-meds" class="view-section">
+        <div class="view-header">
+          <div>
+            <h2>Medication & Vitals Tracker</h2>
+            <p class="view-subtitle">Maintain schedule adherence, review drug interaction alerts, and log daily biometric telemetry.</p>
+          </div>
+        </div>
+
+        <!-- Drug Interaction Alert (Dynamic) -->
+        <div id="drugInteractionAlert" style="display: none;"></div>
+
+        <div class="meds-vitals-grid">
+          <!-- Medication Column -->
+          <div class="section-panel">
+            <div class="section-header-row">
+              <h3>Medications & Regimen</h3>
+              <button class="btn-primary" id="openAddMedBtn" style="font-size: 13px; padding: 8px 14px;">+ Add Med</button>
+            </div>
+
+            <div class="adherence-banner">
+              <div>
+                <span class="adherence-title">Today's Adherence Rate</span>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Keep up your consistent daily streak</p>
+              </div>
+              <span class="adherence-pct" id="todayAdherencePct">75%</span>
+            </div>
+
+            <div class="medications-list" id="medicationsList"></div>
+          </div>
+
+          <!-- Vitals Column -->
+          <div class="section-panel">
+            <div class="section-header-row">
+              <h3>Vitals & Biometric Logs</h3>
+              <button class="btn-secondary" id="openAddVitalBtn" style="font-size: 13px; padding: 8px 14px;">+ Log Vital</button>
+            </div>
+
+            <!-- SVG Trend Chart -->
+            <div id="vitalsChartContainer" style="margin-bottom: 20px;"></div>
+
+            <!-- Table of Vitals -->
+            <div class="vitals-table-wrapper">
+              <table class="vitals-table">
+                <thead>
+                  <tr>
+                    <th>Date / Time</th>
+                    <th>Metric</th>
+                    <th>Reading</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="vitalsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================================
+           VIEW 5: DOCTOR VISIT PREP SHEET
+           =================================================================== -->
+      <section id="view-doctor" class="view-section">
+        <div class="view-header no-print">
+          <div>
+            <h2>Doctor Visit Prep & Health Summary</h2>
+            <p class="view-subtitle">Generate an organized, printable briefing for your next clinical consultation with prioritized questions.</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-secondary" id="refreshSummaryBtn">🔄 Refresh Data</button>
+            <button class="btn-primary" id="printSummaryBtn">🖨️ Print / Save PDF</button>
+          </div>
+        </div>
+
+        <div class="doctor-prep-container">
+          <div class="prep-document-sheet" id="prepDocumentSheet">
+            <div class="prep-doc-header">
+              <h2 class="prep-doc-title">Executive Clinical Summary & Consultation Prep</h2>
+              <p class="prep-patient-meta" id="prepPatientMeta">Alex Morgan | Age: 42 | Sex: Male | Allergies: Penicillin, Sulfa</p>
+              <p class="prep-provider-info" id="prepProviderInfo">Primary Physician: Dr. Elena Rostova, MD (Metro Health Internal Medicine)</p>
+            </div>
+
+            <!-- Active Diagnoses -->
+            <div class="prep-section">
+              <h3 class="prep-section-title">🏥 Active Diagnoses & Chronic Focus Areas</h3>
+              <ul id="prepConditionsList" style="padding-left: 20px; font-size: 14px;"></ul>
+            </div>
+
+            <!-- Recent Vitals Averages -->
+            <div class="prep-section">
+              <h3 class="prep-section-title">💓 Recent Vitals Telemetry Averages (Last 14 Days)</h3>
+              <div class="prep-metrics-grid" id="prepVitalsMetrics"></div>
+            </div>
+
+            <!-- Abnormal Lab Findings -->
+            <div class="prep-section">
+              <h3 class="prep-section-title">🔬 Out-of-Range Diagnostic Biomarkers</h3>
+              <div class="prep-labs-list" id="prepAbnormalLabs"></div>
+            </div>
+
+            <!-- Current Medications -->
+            <div class="prep-section">
+              <h3 class="prep-section-title">💊 Active Medications & Regimen</h3>
+              <div id="prepMedsList" style="display: flex; flex-direction: column; gap: 6px;"></div>
+            </div>
+
+            <!-- Prioritized Questions for Clinician -->
+            <div class="prep-section">
+              <h3 class="prep-section-title">❓ Prioritized Questions for Your Doctor</h3>
+              <ul class="prep-questions-list" id="prepGeneratedQuestions"></ul>
+            </div>
+
+            <!-- Custom Discussion Topics -->
+            <div class="prep-section no-print" style="margin-top: 24px;">
+              <h3 class="prep-section-title">📝 Additional Symptoms or Topics You Wish to Discuss</h3>
+              <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                <input type="text" id="newTopicInput" class="form-input" placeholder="e.g. Mild knee stiffness after running 5k...">
+                <button class="btn-secondary" id="addTopicBtn" style="white-space: nowrap;">Add Topic</button>
+              </div>
+              <ul id="doctorTopicsList" style="list-style: none; display: flex; flex-direction: column; gap: 6px;"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================================
+           VIEW 6: SETTINGS & MODEL CONFIGURATION
+           =================================================================== -->
+      <section id="view-settings" class="view-section">
+        <div class="view-header">
+          <div>
+            <h2>System Settings & AI Configuration</h2>
+            <p class="view-subtitle">Configure model API keys, manage local data persistence, and review privacy details.</p>
+          </div>
+        </div>
+
+        <div style="max-width: 680px; display: flex; flex-direction: column; gap: 24px;">
+          <div class="section-panel">
+            <h3 style="font-size: 16px; margin-bottom: 14px;">🤖 Google Gemini Live AI Integration (Optional)</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+              Health Copilot includes a complete built-in clinical triage and biomarker intelligence engine that runs offline with zero setup. If you'd like live, dynamic generative LLM responses, you can enter your Google Gemini API key below.
+            </p>
+            <div class="form-group">
+              <label for="geminiApiKeyInput">Gemini API Key</label>
+              <input type="password" id="geminiApiKeyInput" class="form-input" placeholder="AIzaSy...">
+            </div>
+            <button class="btn-primary" id="saveSettingsBtn">Save Settings</button>
+          </div>
+
+          <div class="section-panel">
+            <h3 style="font-size: 16px; margin-bottom: 14px;">🔒 Privacy & Zero-Cloud Guarantee</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+              All patient vitals, medications, and lab reports are stored exclusively within your browser's local sandbox (IndexedDB & LocalStorage). No private patient data is ever transferred to third-party databases or marketing servers.
+            </p>
+          </div>
+
+          <div class="section-panel">
+            <h3 style="font-size: 16px; margin-bottom: 14px;">🔄 Demonstration Sample Data</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+              Reset all logs back to the default presentation demo state (Alex Morgan, CMP/Lipid panel, prediabetes vitals).
+            </p>
+            <button class="btn-secondary" id="resetDemoDataBtn" style="color: #F87171; border-color: rgba(239, 68, 68, 0.4);">
+              Reset to Demo Data
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===================================================================
+       MODAL: ADD MEDICATION
+       =================================================================== -->
+  <div id="addMedModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add New Medication</h3>
+        <button id="closeAddMedBtn" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="addMedForm">
+        <div class="form-group">
+          <label for="medNameInput">Medication Name</label>
+          <input type="text" id="medNameInput" class="form-input" placeholder="e.g. Lisinopril, Metformin" required>
+        </div>
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div>
+            <label for="medDosageInput">Dosage</label>
+            <input type="text" id="medDosageInput" class="form-input" placeholder="e.g. 10 mg, 500 mg" required>
+          </div>
+          <div>
+            <label for="medFreqInput">Frequency</label>
+            <select id="medFreqInput" class="form-select">
+              <option value="Once daily">Once daily</option>
+              <option value="Twice daily">Twice daily</option>
+              <option value="Three times daily">Three times daily</option>
+              <option value="As needed">As needed (PRN)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="medTimingInput">Timing</label>
+          <select id="medTimingInput" class="form-select">
+            <option value="Morning">Morning</option>
+            <option value="Morning & Evening">Morning & Evening</option>
+            <option value="Bedtime">Bedtime</option>
+            <option value="With Meals">With Meals</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="medPurposeInput">Clinical Purpose / Condition</label>
+          <input type="text" id="medPurposeInput" class="form-input" placeholder="e.g. Blood pressure regulation">
+        </div>
+        <div class="form-group">
+          <label for="medInstructionsInput">Special Instructions</label>
+          <input type="text" id="medInstructionsInput" class="form-input" placeholder="e.g. Take with a full glass of water">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="submit" class="btn-primary">Save Medication</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MODAL: LOG VITAL
+       =================================================================== -->
+  <div id="addVitalModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Log Health Vital</h3>
+        <button id="closeAddVitalBtn" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="addVitalForm">
+        <div class="form-group">
+          <label for="vitalTypeSelect">Metric Type</label>
+          <select id="vitalTypeSelect" class="form-select">
+            <option value="blood_pressure">Blood Pressure (mmHg)</option>
+            <option value="glucose">Fasting Blood Glucose (mg/dL)</option>
+            <option value="heart_rate">Resting Heart Rate (bpm)</option>
+            <option value="spo2">Oxygen Saturation (SpO2 %)</option>
+          </select>
+        </div>
+
+        <!-- BP Specific Fields -->
+        <div id="bpSpecificFields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+          <div>
+            <label for="vitalSystolicInput">Systolic (mmHg)</label>
+            <input type="number" id="vitalSystolicInput" class="form-input" placeholder="e.g. 120" min="70" max="250">
+          </div>
+          <div>
+            <label for="vitalDiastolicInput">Diastolic (mmHg)</label>
+            <input type="number" id="vitalDiastolicInput" class="form-input" placeholder="e.g. 80" min="40" max="150">
+          </div>
+        </div>
+
+        <!-- Single Numeric Field (for glucose, HR, SpO2) -->
+        <div id="singleValueField" class="form-group" style="display: none;">
+          <label for="vitalValueInput">Reading Value</label>
+          <input type="number" id="vitalValueInput" class="form-input" placeholder="Enter measurement" step="any">
+        </div>
+
+        <div class="form-group">
+          <label for="vitalNotesInput">Notes / Context (Optional)</label>
+          <input type="text" id="vitalNotesInput" class="form-input" placeholder="e.g. Morning fasting, post exercise">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="submit" class="btn-primary">Save Vital</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Application Bootstrap -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
