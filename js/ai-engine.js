@@ -312,7 +312,7 @@ export class ClinicalAIEngine {
   }
 
   async callGeminiAPI(apiKey, prompt, context) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
 
     const systemPrompt = `You are an AI-powered Personal Health Copilot for a patient named ${context.patient.name} (${context.patient.age} y/o, ${context.patient.gender}).
 Current Conditions: ${context.patient.conditions.join(", ")}.
