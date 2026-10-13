@@ -282,6 +282,7 @@ export class ClinicalAIEngine {
     const vitals = this.db.getVitals().slice(0, 5);
     const meds = this.db.getMedications();
 
+    let apiNotice = "";
     if (settings.geminiApiKey && settings.geminiApiKey.trim().length > 10) {
       try {
         const liveResponse = await this.callGeminiAPI(settings.geminiApiKey, userInput, {
@@ -295,6 +296,7 @@ export class ClinicalAIEngine {
         };
       } catch (err) {
         console.warn("Gemini API call failed, falling back to clinical engine:", err);
+        apiNotice = `> ℹ️ *Note: Gemini Live API error (${err.message}). Displaying response from built-in Clinical Engine:* \n\n`;
       }
     }
 
@@ -306,18 +308,24 @@ export class ClinicalAIEngine {
     return {
       triageLevel: triage.level,
       triageBadge: triage.badge,
-      text: heuristicResponse,
+      text: apiNotice + heuristicResponse,
       source: "clinical-engine"
     };
   }
 
   async callGeminiAPI(apiKey, prompt, context) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-    const systemPrompt = `You are an AI-powered Personal Health Copilot for a patient named ${context.patient.name} (${context.patient.age} y/o, ${context.patient.gender}).
-Current Conditions: ${context.patient.conditions.join(", ")}.
-Current Medications: ${context.meds.map(m => `${m.name} ${m.dosage} (${m.frequency})`).join("; ")}.
-Recent Vitals: ${JSON.stringify(context.vitals)}.
+    const patientName = context.patient?.name || "Patient";
+    const patientAge = context.patient?.age || "40";
+    const patientGender = context.patient?.gender || "Adult";
+    const conditions = (context.patient?.conditions || []).join(", ");
+    const meds = (context.meds || []).map(m => `${m.name} ${m.dosage || ''} (${m.frequency || ''})`).join("; ");
+
+    const systemPrompt = `You are an AI-powered Personal Health Copilot for a patient named ${patientName} (${patientAge} y/o, ${patientGender}).
+Current Conditions: ${conditions}.
+Current Medications: ${meds}.
+Recent Vitals: ${JSON.stringify(context.vitals || [])}.
 
 Always adhere to these clinical communication guidelines:
 1. Empathy, plain language, and rigorous medical accuracy.
@@ -344,18 +352,37 @@ Always adhere to these clinical communication guidelines:
       }
     };
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody)
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-    if (!response.ok) {
-      throw new Error(`Gemini API returned status ${response.status}`);
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        let errDetail = `${response.status}`;
+        try {
+          const errJson = await response.json();
+          if (errJson?.error?.message) errDetail += ` - ${errJson.error.message}`;
+        } catch (_) {}
+        throw new Error(errDetail);
+      }
+
+      const data = await response.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received from model.";
+    } catch (fetchErr) {
+      clearTimeout(timeoutId);
+      if (fetchErr.name === "AbortError") {
+        throw new Error("Request timed out (8s limit)");
+      }
+      throw fetchErr;
     }
-
-    const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received from model.";
   }
 
   generateClinicalHeuristicResponse(input, triage, context) {

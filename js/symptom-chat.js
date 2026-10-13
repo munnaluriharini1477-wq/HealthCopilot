@@ -19,18 +19,25 @@ export class SymptomChat {
   bindEvents() {
     const form = document.getElementById("chatForm");
     const input = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendChatBtn");
     const clearBtn = document.getElementById("clearChatBtn");
     const chipsContainer = document.getElementById("quickPromptChips");
 
+    const doSubmit = (e) => {
+      if (e) e.preventDefault();
+      const text = input ? input.value.trim() : "";
+      if (text) {
+        this.sendMessage(text);
+        if (input) input.value = "";
+      }
+    };
+
     if (form) {
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const text = input.value.trim();
-        if (text) {
-          this.sendMessage(text);
-          input.value = "";
-        }
-      });
+      form.addEventListener("submit", doSubmit);
+    }
+
+    if (sendBtn) {
+      sendBtn.addEventListener("click", doSubmit);
     }
 
     if (clearBtn) {
@@ -170,25 +177,22 @@ export class SymptomChat {
     });
 
     // Render user message immediately
-    const userDiv = document.createElement("div");
-    userDiv.innerHTML = this.formatMessageHTML(userMsg);
-    container.appendChild(userDiv.firstElementChild);
+    container.insertAdjacentHTML("beforeend", this.formatMessageHTML(userMsg));
     this.scrollToBottom();
 
     // Show typing indicator
     const typingId = "typing_" + Date.now();
-    const typingDiv = document.createElement("div");
-    typingDiv.className = "chat-message assistant-message typing-indicator-msg";
-    typingDiv.id = typingId;
-    typingDiv.innerHTML = `
-      <div class="msg-avatar">🩺</div>
-      <div class="msg-content-wrapper">
-        <div class="typing-dots">
-          <span></span><span></span><span></span>
+    const typingHtml = `
+      <div class="chat-message assistant-message typing-indicator-msg" id="${typingId}">
+        <div class="msg-avatar">🩺</div>
+        <div class="msg-content-wrapper">
+          <div class="typing-dots">
+            <span></span><span></span><span></span>
+          </div>
         </div>
       </div>
     `;
-    container.appendChild(typingDiv);
+    container.insertAdjacentHTML("beforeend", typingHtml);
     this.scrollToBottom();
 
     // Process via AI Engine
@@ -208,9 +212,7 @@ export class SymptomChat {
       });
 
       // Render assistant message
-      const asstDiv = document.createElement("div");
-      asstDiv.innerHTML = this.formatMessageHTML(assistantMsg);
-      container.appendChild(asstDiv.firstElementChild);
+      container.insertAdjacentHTML("beforeend", this.formatMessageHTML(assistantMsg));
       this.bindSpeechButtons(container);
       this.scrollToBottom();
 
